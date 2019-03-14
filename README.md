@@ -14,4 +14,17 @@ web app fibonacci number
 ## RUN
 
     docker-compose build
-    docker-compose run
+    docker-compose up
+    
+    # daemon 
+    # docker-compose up -d
+    
+    # default
+    http://localhost:3000/
+
+
+## REBUILD
+    
+    docker-compose down -- rmi local
+    docker-compose build
+    
