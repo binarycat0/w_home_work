@@ -1,0 +1,55 @@
+version: "3"
+
+services:
+  nginx:
+    image: nginx:1.15
+    volumes:
+    - ./deploy/nginx.conf:/etc/nginx/conf.d/nginx.conf
+    - web-static:/var/www:ro
+    ports:
+    - "3000:80"
+    environment:
+    - NGINX_PORT=80
+    depends_on:
+    - frontend
+    links:
+    - frontend
+    command: /bin/bash -c "envsubst < /etc/nginx/conf.d/nginx.conf > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"
+
+  base-frontend:
+    build: ./frontend
+    image: base-frontend:latest
+
+  base-backend:
+    build: ./backend
+    image: base-backend:latest
+
+  frontend:
+    image: base-frontend:latest
+    command: "npm run build"
+    env_file:
+    - ./deploy/env
+    volumes:
+    - ./frontend/src/:/usr/app/src
+    - web-static:/usr/app/build:rw
+    depends_on:
+    - base-frontend
+
+  backend:
+    image: base-backend:latest
+    volumes:
+    - ./log:/var/log/app/:rw
+    - ./backend/src:/usr/app
+    - ./deploy/backend_entrypoint.sh:/usr/backend_entrypoint.sh
+    entrypoint: /usr/backend_entrypoint.sh
+    ports:
+    - 127.0.0.1:8080:8080
+    env_file:
+    - ./deploy/env
+    depends_on:
+    - base-backend
+    links:
+    - base-backend
+
+volumes:
+  web-static:
