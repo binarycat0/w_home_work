@@ -6,7 +6,7 @@
     "bootstrap": "^4.3.1",
     "highcharts": "^7.0.3",
     "highcharts-react-official": "^2.1.1",
-    "jquery": "^1.9.1",
+    "jquery": "^3.4.0",
     "react": "^16.8.4",
     "react-dom": "^16.8.4",
     "react-jsx-highcharts": "^3.5.0",
